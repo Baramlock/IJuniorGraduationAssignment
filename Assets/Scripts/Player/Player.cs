@@ -24,12 +24,8 @@ public class Player : MonoBehaviour
         if (_playerInput.VerticalDirection != 0)
         {
             _playerMove.TryMove(new Vector3(0, 0, _playerInput.VerticalDirection));
-            _distans = transform.position.z + 1;
-            if (_score < (int)_distans)
-            {
-                _score = (int)_distans;
-                ScoreChanged?.Invoke(_score);
-            }
+            _distans = transform.position.z;
+            CountScore();
         }
         else if (_playerInput.HorizontalDirection != 0)
         {
@@ -42,6 +38,15 @@ public class Player : MonoBehaviour
     {
         Destroy(gameObject);
         Die?.Invoke();
+    }
+
+    private void CountScore()
+    {
+        if (_score < (int)_distans)
+        {
+            _score = (int)_distans;
+            ScoreChanged?.Invoke(_score);
+        }
     }
 
 }
