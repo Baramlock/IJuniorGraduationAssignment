@@ -125,7 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _duration: 0.5
   _blockMovePointOneX: -1
-  _blockMovePointOneZ: 0
+  _blockMovePointOneZ: 1
   _blockMovePointTwoX: 1
   _blockMovePointTwoZ: 9999
 --- !u!114 &4496057113629670369

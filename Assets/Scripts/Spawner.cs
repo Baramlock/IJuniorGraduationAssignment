@@ -12,14 +12,18 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Vector3 _startPosition;
     [SerializeField] private int _duration = 4;
     [SerializeField] private int _startLeanght = 15;
-
+    [SerializeField] private int _descentHeight = 7;
     [SerializeField] private int _maxPlace;
+     
+
     private int _windth = 3;
-    private List<Place> _places;
+    private List<Place> _placesActive;
+    private Pool<Place> _prefabsPool;
 
     private void Awake()
     {
-        _places = new List<Place>();
+        _placesActive = new List<Place>();
+
         for (int i = 0; i < _startLeanght; i++)
         {
             for (int j = 0; j < _windth; j++)
@@ -27,10 +31,13 @@ public class Spawner : MonoBehaviour
                 var place = Instantiate(_startPlace, _startPosition + new Vector3(j, 0, i), Quaternion.identity);
             }
         }
+
         var player = Instantiate(_player, _playerStartPosition, Quaternion.identity);
         _camera.Init(player);
-    }
 
+        _prefabsPool = new Pool<Place>();
+        _prefabsPool.AddPoolPrefabs(_assembledPlaces);
+    }
     private void OnEnable()
     {
         Player.ScoreChanged += BuildPlace;
@@ -43,30 +50,30 @@ public class Spawner : MonoBehaviour
 
     private void BuildPlace(int distans)
     {
-        if (_places.Count < _maxPlace)
+        var startPosition = _startPosition + new Vector3(0, _descentHeight, _startLeanght + distans - 1);
+        var position = startPosition + Vector3.down * _descentHeight;
+
+        if (_placesActive.Count >= _maxPlace)
         {
-            var newPlace = Instantiate(_assembledPlaces[Random.Range(0, _assembledPlaces.Count)], _startPosition + new Vector3(0, 7, _startLeanght + distans - 1), Quaternion.identity);
-            newPlace.transform.DOMove(_startPosition + new Vector3(0, 0, _startLeanght + distans - 1), _duration);
-            _places.Add(newPlace);
+            for (int i = 0; i < _maxPlace / 2; i++)
+            {
+                _prefabsPool.ReturnInPool(_placesActive[0]);
+                _placesActive.RemoveAt(0);
+            }
         }
-        else
-        {
-            int placeIndex = Random.Range(0, (int)0.5 * _maxPlace);
-            _places[placeIndex].gameObject.SetActive(true);
-            _places[placeIndex].transform.position = _startPosition + new Vector3(0, 7, _startLeanght + distans - 1);
-            _places[placeIndex].transform.DOMove(_startPosition + new Vector3(0, 0, _startLeanght + distans - 1), _duration);
-            _places.Add(_places[placeIndex]);
-            _places.RemoveAt(placeIndex);
-        }
+
+        var newPlace = _prefabsPool.GetFromPool();
+        newPlace.transform.position = startPosition;
+        newPlace.transform.DOMove(position, _duration);
+        _placesActive.Add(newPlace);
     }
 
     public void Restart()
     {
         var player = Instantiate(_player, _playerStartPosition, Quaternion.identity);
         _camera.Init(player);
-        foreach (var place in _places)
-        {
-            place.gameObject.SetActive(false);
-        }
+        foreach (var place in _placesActive)
+            _prefabsPool.ReturnInPool(place);
+        _placesActive.Clear();
     }
 }

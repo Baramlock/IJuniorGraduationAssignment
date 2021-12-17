@@ -976,7 +976,8 @@ MonoBehaviour:
   _startPosition: {x: -1, y: -1, z: 1}
   _duration: 4
   _startLeanght: 10
-  _maxPlace: 15
+  _descentHeight: 7
+  _maxPlace: 20
 --- !u!4 &1230851467
 Transform:
   m_ObjectHideFlags: 0
@@ -1323,8 +1324,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 300218654}
-        m_TargetAssemblyTypeName: Restart, Assembly-CSharp
-        m_MethodName: OnButtonClic
+        m_TargetAssemblyTypeName: Reloader, Assembly-CSharp
+        m_MethodName: OnButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
