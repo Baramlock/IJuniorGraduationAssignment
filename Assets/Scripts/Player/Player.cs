@@ -31,7 +31,6 @@ public class Player : MonoBehaviour
         {
             _playerMove.TryMove(new Vector3(_playerInput.HorizontalDirection, 0, 0));
         }
-
     }
 
     public void Dies()

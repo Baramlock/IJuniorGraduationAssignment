@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Restart : MonoBehaviour
+public class Reloader : MonoBehaviour
 {
     [SerializeField] private Spawner _spawner;
     [SerializeField] private GameObject _button;
 
-    public void OnButtonClic()
+    public void OnButtonClick()
     {
         _spawner.Restart();
-         Time.timeScale = 1;
+        Time.timeScale = 1;
         _button.SetActive(false);
     }
 }

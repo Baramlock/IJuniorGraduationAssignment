@@ -9,7 +9,7 @@ public class FollowTarget : MonoBehaviour
     private void Start()
     {
         _startPosition = transform.position;
-        _startTargetPosition = _target.transform.position ;
+        _startTargetPosition = _target.transform.position;
     }
 
     private void Update()

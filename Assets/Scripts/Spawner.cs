@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour
 
     [SerializeField] private int _maxPlace;
     private int _windth = 3;
-    private List<Place > _places;
+    private List<Place> _places;
 
     private void Awake()
     {
@@ -56,7 +56,7 @@ public class Spawner : MonoBehaviour
             _places[placeIndex].transform.position = _startPosition + new Vector3(0, 7, _startLeanght + distans - 1);
             _places[placeIndex].transform.DOMove(_startPosition + new Vector3(0, 0, _startLeanght + distans - 1), _duration);
             _places.Add(_places[placeIndex]);
-            _places.RemoveAt(placeIndex); 
+            _places.RemoveAt(placeIndex);
         }
     }
 
