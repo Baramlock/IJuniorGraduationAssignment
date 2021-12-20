@@ -8,7 +8,7 @@ public class StateMachine : MonoBehaviour
 
     private void Start()
     {
-        Reset(_startState);
+        Reset();
     }
 
     private void Update()
@@ -25,9 +25,9 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    private void Reset(State starteState)
+    private void Reset()
     {
-        _currentState = starteState;
+        _currentState = _startState;
         if (_currentState != null)
         {
             _currentState.Enter();

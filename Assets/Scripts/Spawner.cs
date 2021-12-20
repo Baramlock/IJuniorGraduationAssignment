@@ -11,12 +11,11 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Vector3 _playerStartPosition;
     [SerializeField] private Vector3 _startPosition;
     [SerializeField] private int _duration = 4;
-    [SerializeField] private int _startLeanght = 15;
+    [SerializeField] private int _startLength = 15;
     [SerializeField] private int _descentHeight = 7;
     [SerializeField] private int _maxPlace;
-     
 
-    private int _windth = 3;
+    private int _width = 3;
     private List<Place> _placesActive;
     private Pool<Place> _prefabsPool;
 
@@ -24,11 +23,11 @@ public class Spawner : MonoBehaviour
     {
         _placesActive = new List<Place>();
 
-        for (int i = 0; i < _startLeanght; i++)
+        for (int i = 0; i < _startLength; i++)
         {
-            for (int j = 0; j < _windth; j++)
+            for (int j = 0; j < _width; j++)
             {
-                var place = Instantiate(_startPlace, _startPosition + new Vector3(j, 0, i), Quaternion.identity);
+                Instantiate(_startPlace, _startPosition + new Vector3(j, 0, i), Quaternion.identity);
             }
         }
 
@@ -38,6 +37,7 @@ public class Spawner : MonoBehaviour
         _prefabsPool = new Pool<Place>();
         _prefabsPool.AddPoolPrefabs(_assembledPlaces);
     }
+
     private void OnEnable()
     {
         Player.ScoreChanged += BuildPlace;
@@ -48,18 +48,15 @@ public class Spawner : MonoBehaviour
         Player.ScoreChanged -= BuildPlace;
     }
 
-    private void BuildPlace(int distans)
+    private void BuildPlace(int distance)
     {
-        var startPosition = _startPosition + new Vector3(0, _descentHeight, _startLeanght + distans - 1);
+        var startPosition = _startPosition + new Vector3(0, _descentHeight, _startLength + distance - 1);
         var position = startPosition + Vector3.down * _descentHeight;
 
         if (_placesActive.Count >= _maxPlace)
         {
-            for (int i = 0; i < _maxPlace / 2; i++)
-            {
-                _prefabsPool.ReturnInPool(_placesActive[0]);
-                _placesActive.RemoveAt(0);
-            }
+            _prefabsPool.ReturnInPool(_placesActive.GetRange(0, _maxPlace / 2));
+            _placesActive.RemoveRange(0, _maxPlace / 2);
         }
 
         var newPlace = _prefabsPool.GetFromPool();

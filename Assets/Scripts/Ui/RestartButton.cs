@@ -3,14 +3,15 @@ using UnityEngine;
 public class RestartButton : MonoBehaviour
 {
     [SerializeField] private GameObject _button;
+
     private void OnEnable()
     {
-        Player.Die += ViewRestartPlace;
+        Player.Died += ViewRestartPlace;
     }
 
     private void OnDisable()
     {
-        Player.Die += ViewRestartPlace;
+        Player.Died += ViewRestartPlace;
     }
 
     private void ViewRestartPlace()

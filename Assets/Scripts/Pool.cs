@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Pool<T> where T : MonoBehaviour
 {
-    private List<T> _prefabsPool = new List<T>();
+    private readonly List<T> _prefabsPool = new List<T>();
     private List<T> _prefabs = new List<T>();
 
     public void AddPoolPrefabs(List<T> prefabs)
@@ -17,19 +17,26 @@ public class Pool<T> where T : MonoBehaviour
         _prefabsPool.Add(prefab);
     }
 
+    public void ReturnInPool(List<T> prefabs)
+    {
+        foreach (var prefab in prefabs)
+        {
+            prefab.gameObject.SetActive(false);
+            _prefabsPool.Add(prefab);
+        }
+    }
+
     public T GetFromPool()
     {
         if (_prefabsPool.Count == 0)
         {
-            return GameObject.Instantiate(_prefabs[Random.Range(0, _prefabs.Count)]);
+            return Object.Instantiate(_prefabs[Random.Range(0, _prefabs.Count)]);
         }
-        else
-        {
-            var randomIndex = Random.Range(0, _prefabsPool.Count);
-            var randomPrefab = _prefabsPool[randomIndex];
-            randomPrefab.gameObject.SetActive(true);
-            _prefabsPool.RemoveAt(randomIndex);
-            return randomPrefab;
-        }
+
+        var randomIndex = Random.Range(0, _prefabsPool.Count);
+        var randomPrefab = _prefabsPool[randomIndex];
+        randomPrefab.gameObject.SetActive(true);
+        _prefabsPool.RemoveAt(randomIndex);
+        return randomPrefab;
     }
 }

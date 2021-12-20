@@ -10,91 +10,87 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _blockMovePointTwoX;
     [SerializeField] private float _blockMovePointTwoZ;
 
-    public static event UnityAction PlayerStartMove;
-    public static event UnityAction PlayerHalfMoved;
-    public static event UnityAction PlayerFullMove;
+    public static event UnityAction StartMove;
+    public static event UnityAction HalfMoved;
+    public static event UnityAction EndMove;
 
-    private Transform _cube;
     private float _scale;
     private bool _isRolling;
 
-    public float Duration => _duration;
-
     private void Start()
     {
-        _cube = GetComponent<Transform>();
-        _scale = _cube.localScale.x / 2;
+        _scale = transform.localScale.x / 2;
     }
 
     public void TryMove(Vector3 direction)
     {
         if (_isRolling == false)
         {
-            if (_cube.transform.position.x <= _blockMovePointOneX && direction.x < 0 || _cube.transform.position.x >= _blockMovePointTwoX && direction.x > 0)
+            if (transform.position.x <= _blockMovePointOneX && direction.x < 0 ||
+                transform.position.x >= _blockMovePointTwoX && direction.x > 0)
             {
                 return;
             }
-            else if (_cube.transform.position.z <= _blockMovePointOneZ && direction.z < 0 || _cube.transform.position.z >= _blockMovePointTwoZ && direction.z > 0)
+
+            if (transform.position.z <= _blockMovePointOneZ && direction.z < 0 ||
+                transform.position.z >= _blockMovePointTwoZ && direction.z > 0)
             {
                 return;
             }
+
             _isRolling = true;
-            PlayerStartMove?.Invoke();
+            StartMove?.Invoke();
             StartCoroutine(RollingCube(direction));
         }
     }
 
     private IEnumerator RollingCube(Vector3 direction)
     {
-        float elapset = 0f;
-        bool isHaflTimeDuration = true;
-        ReturnValueByRotate(direction, out Vector3 transformPoint, out Vector3 axis, out float angle, out Vector3 _newPosition);
+        var elapsed = 0f;
+        var isHalfTimeDuration = true;
+        FindValueByRotate(direction, out Vector3 transformPoint, out Vector3 axis, out float angle,
+            out Vector3 newPosition);
 
-        while (elapset < _duration)
+        while (elapsed < _duration)
         {
-            elapset += Time.deltaTime;
-            if (elapset > _duration / 2 && isHaflTimeDuration)
+            elapsed += Time.deltaTime;
+            if (elapsed > _duration / 2 && isHalfTimeDuration)
             {
-                PlayerHalfMoved?.Invoke();
-                isHaflTimeDuration = false;
+                HalfMoved?.Invoke();
+                isHalfTimeDuration = false;
             }
 
-            _cube.RotateAround(
-                transformPoint,
-                axis,
-                angle / _duration * Time.deltaTime);
-
+            transform.RotateAround(transformPoint, axis, angle / _duration * Time.deltaTime);
             yield return null;
         }
 
-        _cube.position = _newPosition;
-        _cube.rotation = Quaternion.identity;
+        transform.position = newPosition;
+        transform.rotation = Quaternion.identity;
         _isRolling = false;
-        PlayerFullMove?.Invoke();
+        EndMove?.Invoke();
     }
 
-    private void ReturnValueByRotate(Vector3 direction, out Vector3 transformPoint, out Vector3 axis, out float angle, out Vector3 newPosition)
+    private void FindValueByRotate(Vector3 direction, out Vector3 transformPoint, out Vector3 axis, out float angle,
+        out Vector3 newPosition)
     {
+        var position = transform.position;
         if (direction.z != 0)
         {
             axis = Vector3.left;
-            transformPoint = _cube.position + (Vector3.forward * direction.z + Vector3.down) * _scale;
-            newPosition = _cube.position + Vector3.forward * direction.z;
             angle = direction.z < 0 ? 90 : -90;
         }
         else if (direction.x != 0)
         {
             axis = Vector3.forward;
-            transformPoint = _cube.position + (Vector3.right * direction.x + Vector3.down) * _scale;
-            newPosition = _cube.position + Vector3.right * direction.x;
             angle = direction.x < 0 ? 90 : -90;
         }
         else
         {
             axis = Vector3.left;
-            transformPoint = _cube.position + (Vector3.forward + Vector3.up * direction.y) * _scale;
-            newPosition = _cube.position + Vector3.up * direction.y;
             angle = direction.y < 0 ? 90 : -90;
         }
+
+        transformPoint = position + (direction + Vector3.down) * _scale;
+        newPosition = position + direction;
     }
 }

@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class State : MonoBehaviour
 {
     [SerializeField] private List<Transition> _transitions;
-
-    private void Start()
-    {
-
-    }
 
     public void Enter()
     {
@@ -28,18 +24,12 @@ public abstract class State : MonoBehaviour
         {
             transition.enabled = false;
         }
+
         enabled = false;
     }
 
     public State GetNextState()
     {
-        foreach (var transition in _transitions)
-        {
-            if (transition.NeedTransit)
-            {
-                return transition.TargetState;
-            }
-        }
-        return null;
+        return _transitions.FirstOrDefault(x => x.NeedTransit)?.TargetState;
     }
 }

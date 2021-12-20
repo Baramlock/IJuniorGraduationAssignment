@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Reloader : MonoBehaviour
+public class ReLoader : MonoBehaviour
 {
     [SerializeField] private Spawner _spawner;
     [SerializeField] private GameObject _button;

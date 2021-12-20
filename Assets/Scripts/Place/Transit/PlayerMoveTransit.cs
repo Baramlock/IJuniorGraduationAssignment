@@ -2,16 +2,16 @@ public class PlayerMoveTransit : Transition
 {
     private void OnEnable()
     {
-        PlayerMovement.PlayerHalfMoved += Transit;
-
+        PlayerMovement.HalfMoved += Transit;
     }
+
     private void OnDisable()
     {
         NeedTransit = false;
-        PlayerMovement.PlayerHalfMoved -= Transit;
+        PlayerMovement.HalfMoved -= Transit;
     }
 
-    public void Transit()
+    private void Transit()
     {
         NeedTransit = true;
     }

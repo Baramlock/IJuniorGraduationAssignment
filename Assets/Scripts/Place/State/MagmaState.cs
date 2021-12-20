@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Renderer))]
 public class MagmaState : State
 {
     private BoxCollider _boxCollider;
@@ -11,6 +13,7 @@ public class MagmaState : State
         _boxCollider = GetComponent<BoxCollider>();
         _renderer = GetComponent<Renderer>();
     }
+
     private void OnEnable()
     {
         _boxCollider.enabled = true;
@@ -28,7 +31,7 @@ public class MagmaState : State
     {
         if (other.TryGetComponent<Player>(out var player))
         {
-            player.Dies();
+            player.Die();
         }
     }
 }

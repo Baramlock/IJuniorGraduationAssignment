@@ -6,12 +6,12 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     public static event UnityAction<int> ScoreChanged;
-    public static event UnityAction Die;
+    public static event UnityAction Died;
 
     private int _score;
     private PlayerInput _playerInput;
     private PlayerMovement _playerMove;
-    private float _distans;
+    private float _distance;
 
     private void Start()
     {
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
         if (_playerInput.VerticalDirection != 0)
         {
             _playerMove.TryMove(new Vector3(0, 0, _playerInput.VerticalDirection));
-            _distans = transform.position.z;
+            _distance = transform.position.z;
             CountScore();
         }
         else if (_playerInput.HorizontalDirection != 0)
@@ -33,19 +33,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Dies()
+    public void Die()
     {
         Destroy(gameObject);
-        Die?.Invoke();
+        Died?.Invoke();
     }
 
     private void CountScore()
     {
-        if (_score < (int)_distans)
+        if (_score < (int) _distance)
         {
-            _score = (int)_distans;
+            _score = (int) _distance;
             ScoreChanged?.Invoke(_score);
         }
     }
-
 }

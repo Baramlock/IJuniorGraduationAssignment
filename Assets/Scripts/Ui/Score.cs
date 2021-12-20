@@ -19,5 +19,4 @@ public class Score : MonoBehaviour
     {
         _score.text = score.ToString();
     }
-
 }
